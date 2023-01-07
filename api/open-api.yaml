@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Flyer - OpenAPI 3.0
+  contact:
+    email: govinda.attal@gmail.com
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+paths:
+  /calculate:
+    post:
+      description: caculates starting and ending ports of a flyers itinerary 
+      operationId: calculate
+      requestBody:
+        description: ordered or un-ordered list of one or more flights of a person's itinerary
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Journey'
+            examples:
+              multiple:
+                $ref: '#/components/examples/multiple'
+              double: 
+                $ref: '#/components/examples/double'
+              single:
+                $ref: '#/components/examples/single'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceDestination'          
+        default:
+          description: Any error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'         
+  
+  /itinerary:
+    post:
+      description: sorts flyers itinerary 
+      operationId: itinerary
+      requestBody:
+        description: ordered or un-ordered list of one or more flights of a person's itinerary
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Journey'
+            examples:
+              multiple:
+                $ref: '#/components/examples/multiple'
+              double: 
+                $ref: '#/components/examples/double'
+              single:
+                $ref: '#/components/examples/single'
+      
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Journey'
+              examples:
+                sorted:
+                  $ref: '#/components/examples/sorted'
+              
+              
+        
+        default:
+          description: Any error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      
+    
+components:
+  examples:
+    single:
+      summary: single flight
+      value: [["SFO", "EWR"]]
+    double:
+      summary: two flights
+      value: [["ATL", "EWR"], ["SFO", "ATL"]]
+    multiple:
+      summary: multiple flights
+      value: [["IND", "EWR"], ["SFO", "ATL"], ["GSO", "IND"], ["ATL", "GSO"]]
+    sorted:
+      summary: sorted itinerary
+      value: [["SFO","ATL"],["ATL","GSO"],["GSO","IND"],["IND","EWR"]]
+    
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: invalid flights data
+  
+    SourceDestination:
+      type: array
+      items:
+        type: string
+      minItems: 2
+      maxItems: 2
+      uniqueItems: true
+      example: ["SFO", "EWR"]         
+
+    Journey:
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/SourceDestination'
+      example: [["IND", "EWR"], ["SFO", "ATL"], ["GSO", "IND"], ["ATL", "GSO"]]

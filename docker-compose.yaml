@@ -1,0 +1,32 @@
+version: '3'
+services:
+  
+  flyer:
+    container_name: flyer
+    hostname: flyer
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME : flyer
+    image:
+      flyer
+    ports: 
+      - 8080:8080
+    networks:
+      - default
+    command: sh -c "/app/flyer"
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    restart: always
+    environment: 
+      - API_URL=http://localhost:8080/api/open-api.yaml
+    ports: 
+      - 7080:8080
+    depends_on:
+      - flyer
+    networks:
+      - default
+        
+networks: 
+  default:

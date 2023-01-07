@@ -1,0 +1,18 @@
+POST http://localhost:8080/calculate HTTP/1.1
+content-type: application/json
+
+[["SFO", "EWR"]] 
+
+###
+
+POST http://localhost:8080/calculate HTTP/1.1
+content-type: application/json
+
+[["ATL", "EWR"], ["SFO", "ATL"]]    
+
+###
+
+POST http://localhost:8080/calculate HTTP/1.1
+content-type: application/json
+
+[["IND", "EWR"], ["SFO", "ATL"], ["GSO", "IND"], ["ATL", "GSO"]]    
